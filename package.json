@@ -1,5 +1,5 @@
 {
-  "name": "auth-service",
+  "name": "imobi-service",
   "version": "1.0.0",
   "type": "module",
   "description": "",
@@ -10,16 +10,10 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src/**/*.ts",
-    "prepare": "husky install"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn prettier-format && yarn lint:fix",
-      "pre-push": "yarn test"
-    }
+    "prepare": "husky"
   },
   "keywords": [],
-  "author": "",
+  "author": "Gabriel Bastos Sandim``",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
