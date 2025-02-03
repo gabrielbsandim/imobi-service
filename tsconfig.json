@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "src",
+    "outDir": "./build",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types/*"
+    ],
+    "types": [
+      "jest",
+      "node"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "*"
+      ],
+      "@/tests/*": [
+        "../tests/*"
+      ]
+    }
+  }
+}
