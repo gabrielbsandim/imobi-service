@@ -22,13 +22,14 @@ export class ListingController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = await schemaValidator<TCreateListingSchema>(
-        req.body,
         createListingSchema,
+        req.body,
       )
 
       const listing = await this.listingService.create({
         ...validatedData,
         buyerId: req.user!.userId!,
+        buyerPhoneNumber: req.user!.phoneNumber!,
       })
 
       res.status(201).json(listing)
@@ -46,8 +47,8 @@ export class ListingController {
       }
 
       const validatedData = await schemaValidator<TUpdateListingSchema>(
-        req.body,
         updateListingSchema,
+        req.body,
       )
 
       const listing = await this.listingService.update(id, validatedData)
@@ -99,8 +100,8 @@ export class ListingController {
     try {
       const { filters, pagination } =
         await schemaValidator<TListFilterListingSchema>(
-          req.body,
           listFilterListingSchema,
+          req.body,
         )
 
       const listing = await this.listingService.list(filters, pagination)

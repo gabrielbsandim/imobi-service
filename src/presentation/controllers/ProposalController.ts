@@ -17,8 +17,8 @@ export class ProposalController {
   async createProposal(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = await schemaValidator<TCreateProposalSchema>(
-        req.body,
         createProposalSchema,
+        req.body,
       )
 
       const proposal = await this.proposalService.create({

@@ -5,6 +5,7 @@ export class ListingEntity {
   constructor(
     public id: string,
     public buyerId: string,
+    public buyerPhoneNumber: string,
     public transactionType: TTransactionType,
     public propertyType: TPropertyType,
     public city: string,

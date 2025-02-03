@@ -4,6 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('listings', table => {
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
     table.uuid('buyer_id').notNullable().references('id').inTable('users')
+    table.string('buyer_phone_number').notNullable()
 
     table.enum('transaction_type', ['buy', 'rent']).notNullable()
     table

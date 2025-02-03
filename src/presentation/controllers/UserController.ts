@@ -24,8 +24,8 @@ export class UserController {
   ): Promise<void> {
     try {
       const validatedData = await schemaValidator<TRegisterSchema>(
-        req.body,
         registerSchema,
+        req.body,
       )
 
       await this.userService.register(validatedData)
@@ -39,8 +39,8 @@ export class UserController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = await schemaValidator<TLoginSchema>(
-        req.body,
         loginSchema,
+        req.body,
       )
 
       const token = await this.userService.login(email, password)

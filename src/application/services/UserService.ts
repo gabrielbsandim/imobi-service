@@ -28,7 +28,12 @@ export class UserService {
     }
 
     return jwt.sign(
-      { userId: user.id, email: user.email, name: user.name },
+      {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        phoneNumber: user.phoneNumber,
+      },
       process.env.JWT_SECRET!,
       {
         expiresIn: '1h',

@@ -13,6 +13,7 @@ import { IUserRepository } from '@/domain/interfaces/IUserRepository'
 import { KnexListingRepository } from '@/infra/database/repositories/KnexListingRepository'
 import { KnexProposalRepository } from '@/infra/database/repositories/KnexProposalRepository'
 import { KnexUserRepository } from '@/infra/database/repositories/KnexUserRepository'
+import { TwilioNotificationService } from '@/infra/services/TwilioNotificationService'
 import { ListingController } from '@/presentation/controllers/ListingController'
 import { ProposalController } from '@/presentation/controllers/ProposalController'
 import { UserController } from '@/presentation/controllers/UserController'
@@ -37,3 +38,7 @@ container.register<IProposalRepository>('IProposalRepository', {
 })
 container.register('ProposalService', { useClass: ProposalService })
 container.register('ProposalController', { useClass: ProposalController })
+
+container.register('TwilioNotificationService', {
+  useClass: TwilioNotificationService,
+})

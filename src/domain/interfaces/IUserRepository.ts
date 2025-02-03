@@ -1,6 +1,7 @@
-import { IUser, TCreateUserRequest } from '@/domain/entities/UserEntity'
+import { UserEntity, TCreateUserRequest } from '@/domain/entities/UserEntity'
 
 export interface IUserRepository {
   create(user: TCreateUserRequest): Promise<void>
-  findByEmail(email: string): Promise<IUser | null>
+  findByEmail(email: string): Promise<UserEntity | null>
+  findById(id: string): Promise<UserEntity | null>
 }

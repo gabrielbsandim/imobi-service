@@ -9,6 +9,7 @@ import { mockUserCreateRequest } from '@/tests/unit/mocks/User.mock'
 const mockUserRepository: jest.Mocked<IUserRepository> = {
   create: jest.fn(),
   findByEmail: jest.fn(),
+  findById: jest.fn(),
 }
 
 jest.mock('bcryptjs', () => ({
@@ -60,6 +61,7 @@ describe('UserService', () => {
         userId: 'DUMMY_ID',
         email: mockUserCreateRequest.email,
         name: mockUserCreateRequest.name,
+        phoneNumber: mockUserCreateRequest.phoneNumber,
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' },

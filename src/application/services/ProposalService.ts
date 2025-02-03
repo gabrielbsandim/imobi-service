@@ -6,7 +6,9 @@ import {
 } from '@/domain/entities/ProposalEntity'
 import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
+import { IUserRepository } from '@/domain/interfaces/IUserRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
+import { TwilioNotificationService } from '@/infra/services/TwilioNotificationService'
 
 @injectable()
 export class ProposalService {
@@ -14,6 +16,9 @@ export class ProposalService {
     @inject('IProposalRepository')
     private proposalRepository: IProposalRepository,
     @inject('IListingRepository') private listingRepository: IListingRepository,
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('TwilioNotificationService')
+    private notificationService: TwilioNotificationService,
   ) {}
 
   async create(
@@ -25,10 +30,17 @@ export class ProposalService {
       throw new NotFoundError('Anúncio não encontrado')
     }
 
-    return this.proposalRepository.create({
+    const createdProposal = await this.proposalRepository.create({
       ...proposal,
       status: 'pending',
     })
+
+    await this.notificationService.sendWhatsAppMessage(
+      listing.buyerPhoneNumber,
+      `📩 Nova proposta para seu anúncio "${listing.description}"! Acesse o app para detalhes.`,
+    )
+
+    return createdProposal
   }
 
   async accept(proposalId: string): Promise<ProposalEntity> {
