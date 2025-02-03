@@ -29,6 +29,7 @@ export default [
         beforeEach: 'readonly',
         afterEach: 'readonly',
         fail: 'readonly',
+        afterAll: 'readonly',
       },
     },
     files: ['**/*.ts'],
