@@ -28,6 +28,7 @@ export default [
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
+        fail: 'readonly',
       },
     },
     files: ['**/*.ts'],
