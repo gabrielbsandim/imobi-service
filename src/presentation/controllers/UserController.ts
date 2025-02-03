@@ -3,7 +3,13 @@ import { injectable, inject } from 'tsyringe'
 
 import { UserService } from '@/application/services/UserService'
 import { UnauthorizedError } from '@/errors/HttpErrors'
-import { loginSchema, registerSchema } from '@/presentation/schemas/userSchema'
+import { schemaValidator } from '@/presentation/schemas/schemaValidator'
+import {
+  loginSchema,
+  registerSchema,
+  TLoginSchema,
+  TRegisterSchema,
+} from '@/presentation/schemas/userSchema'
 
 @injectable()
 export class UserController {
@@ -17,9 +23,10 @@ export class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const validatedData = await registerSchema.validate(req.body, {
-        abortEarly: false,
-      })
+      const validatedData = await schemaValidator<TRegisterSchema>(
+        req.body,
+        registerSchema,
+      )
 
       await this.userService.register(validatedData)
 
@@ -31,9 +38,10 @@ export class UserController {
 
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = await loginSchema.validate(req.body, {
-        abortEarly: false,
-      })
+      const { email, password } = await schemaValidator<TLoginSchema>(
+        req.body,
+        loginSchema,
+      )
 
       const token = await this.userService.login(email, password)
 

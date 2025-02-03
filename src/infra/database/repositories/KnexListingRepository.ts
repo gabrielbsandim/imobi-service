@@ -1,5 +1,5 @@
 import { Knex } from 'knex'
-import { inject } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import {
   IPaginationResponse,
@@ -11,9 +11,10 @@ import {
   TListListingFilterRequest,
   TUpdateListingRequest,
 } from '@/domain/entities/ListingEntity'
-import { IListingRepository } from '@/domain/interfaces/IListingRepostory'
+import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 import { removeUndefinedProps } from '@/utils/removeUndefinedProps'
 
+@injectable()
 export class KnexListingRepository implements IListingRepository {
   constructor(@inject('Knex') private readonly knex: Knex) {}
 

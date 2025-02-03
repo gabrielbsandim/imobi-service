@@ -1,22 +1,14 @@
 import { container } from 'tsyringe'
 
 import { ListingService } from '@/application/services/ListingService'
-import { IListingRepository } from '@/domain/interfaces/IListingRepostory'
 import {
   mockCreateListingRequest,
   mockListing,
   mockListingFilterRequest,
+  mockListingRepository,
   mockListListing,
   mockUpdateListingRequest,
 } from '@/tests/unit/mocks/Listing.mock'
-
-const mockListingRepository: jest.Mocked<IListingRepository> = {
-  create: jest.fn().mockResolvedValue(mockListing),
-  list: jest.fn().mockResolvedValue(mockListListing),
-  findById: jest.fn().mockResolvedValue(mockListing),
-  delete: jest.fn(),
-  update: jest.fn(),
-}
 
 container.register('IListingRepository', { useValue: mockListingRepository })
 

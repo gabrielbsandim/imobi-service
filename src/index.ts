@@ -6,6 +6,7 @@ import '@/containers/container'
 import { errorHandler } from '@/presentation/middlewares/errorHandler'
 import feedRoutes from '@/presentation/routes/feedRoutes'
 import listingRoutes from '@/presentation/routes/listingRoutes'
+import proposalRoutes from '@/presentation/routes/proposalRoutes'
 import userRoutes from '@/presentation/routes/userRoutes'
 
 const app = express()
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use('/api/auth', userRoutes)
 
 app.use('/api', listingRoutes)
+app.use('/api', proposalRoutes)
 app.use('/api', feedRoutes)
 
 app.use(errorHandler)

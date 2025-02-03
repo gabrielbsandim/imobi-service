@@ -6,8 +6,12 @@ import { BadRequestError } from '@/errors/HttpErrors'
 import {
   createListingSchema,
   listFilterListingSchema,
+  TCreateListingSchema,
+  TListFilterListingSchema,
+  TUpdateListingSchema,
   updateListingSchema,
 } from '@/presentation/schemas/listingSchema'
+import { schemaValidator } from '@/presentation/schemas/schemaValidator'
 
 @injectable()
 export class ListingController {
@@ -17,9 +21,10 @@ export class ListingController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const validatedData = await createListingSchema.validate(req.body, {
-        abortEarly: false,
-      })
+      const validatedData = await schemaValidator<TCreateListingSchema>(
+        req.body,
+        createListingSchema,
+      )
 
       const listing = await this.listingService.create({
         ...validatedData,
@@ -40,9 +45,10 @@ export class ListingController {
         throw new BadRequestError('Id é obrigatório.')
       }
 
-      const validatedData = await updateListingSchema.validate(req.body, {
-        abortEarly: false,
-      })
+      const validatedData = await schemaValidator<TUpdateListingSchema>(
+        req.body,
+        updateListingSchema,
+      )
 
       const listing = await this.listingService.update(id, validatedData)
 
@@ -91,12 +97,11 @@ export class ListingController {
 
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const { filters, pagination } = await listFilterListingSchema.validate(
-        req.body,
-        {
-          abortEarly: false,
-        },
-      )
+      const { filters, pagination } =
+        await schemaValidator<TListFilterListingSchema>(
+          req.body,
+          listFilterListingSchema,
+        )
 
       const listing = await this.listingService.list(filters, pagination)
 

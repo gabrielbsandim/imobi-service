@@ -5,6 +5,7 @@ import {
   TListListingFilterRequest,
   TUpdateListingRequest,
 } from '@/domain/entities/ListingEntity'
+import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 
 export const mockCreateListingRequest: jest.Mocked<TCreateListingRequest> = {
   buyerId: '123',
@@ -44,3 +45,11 @@ export const mockListListing: jest.Mocked<IPaginationResponse<ListingEntity>> =
       total: 1,
     },
   }
+
+export const mockListingRepository: jest.Mocked<IListingRepository> = {
+  create: jest.fn().mockResolvedValue(mockListing),
+  list: jest.fn().mockResolvedValue(mockListListing),
+  findById: jest.fn().mockResolvedValue(mockListing),
+  delete: jest.fn(),
+  update: jest.fn(),
+}

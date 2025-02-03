@@ -26,6 +26,7 @@ export const createListingSchema = yup.object().shape({
   parkingSpaces: yup.number().min(0).optional(),
   minFloor: yup.number().min(0).optional(),
 })
+export type TCreateListingSchema = yup.InferType<typeof createListingSchema>
 
 export const updateListingSchema = yup.object().shape({
   transactionType: yup
@@ -48,6 +49,7 @@ export const updateListingSchema = yup.object().shape({
   parkingSpaces: yup.number().min(0).optional(),
   minFloor: yup.number().min(0).optional(),
 })
+export type TUpdateListingSchema = yup.InferType<typeof updateListingSchema>
 
 export const listFilterListingSchema = yup.object().shape({
   filters: yup.object().shape({
@@ -76,3 +78,6 @@ export const listFilterListingSchema = yup.object().shape({
     limit: yup.number().min(1).required('Limit é obrigatório.'),
   }),
 })
+export type TListFilterListingSchema = yup.InferType<
+  typeof listFilterListingSchema
+>
