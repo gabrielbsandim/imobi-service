@@ -6,7 +6,6 @@ import {
 } from '@/domain/entities/ProposalEntity'
 import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
-import { IUserRepository } from '@/domain/interfaces/IUserRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
 import { TwilioNotificationService } from '@/infra/services/TwilioNotificationService'
 
@@ -16,7 +15,6 @@ export class ProposalService {
     @inject('IProposalRepository')
     private proposalRepository: IProposalRepository,
     @inject('IListingRepository') private listingRepository: IListingRepository,
-    @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('TwilioNotificationService')
     private notificationService: TwilioNotificationService,
   ) {}

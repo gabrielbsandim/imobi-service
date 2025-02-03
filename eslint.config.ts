@@ -39,6 +39,7 @@ export default [
     },
     rules: {
       ...tsRecommendedRules,
+      '@typescript-eslint/no-explicit-any': 'warn',
       'object-curly-spacing': 'off',
       '@typescript-eslint/semi': 'off',
       semi: 'off',

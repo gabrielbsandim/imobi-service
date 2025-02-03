@@ -9,6 +9,7 @@ import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 
 export const mockCreateListingRequest: jest.Mocked<TCreateListingRequest> = {
   buyerId: '123',
+  buyerPhoneNumber: '+5511999999999',
   transactionType: 'buy',
   propertyType: 'apartment',
   city: 'São Paulo',
