@@ -9,6 +9,7 @@ import { mockUserCreateRequest } from '@/tests/unit/mocks/User.mock'
 const mockUserRepository: jest.Mocked<IUserRepository> = {
   create: jest.fn(),
   findByEmail: jest.fn(),
+  findByPhoneNumber: jest.fn(),
   findById: jest.fn(),
 }
 
@@ -31,13 +32,14 @@ describe('UserService', () => {
     jest.clearAllMocks()
   })
 
-  it('should ccreate user with a hash password', async () => {
+  it('should create user with a hash password and "userType" as "broker"', async () => {
     await userService.register(mockUserCreateRequest)
 
     expect(bcrypt.hash).toHaveBeenCalledWith(mockUserCreateRequest.password, 10)
 
     expect(mockUserRepository.create).toHaveBeenCalledWith({
       ...mockUserCreateRequest,
+      userType: 'broker',
       password: 'hashed_password',
     })
   })
@@ -45,6 +47,7 @@ describe('UserService', () => {
   it('should return a JWT token when the login was successfully', async () => {
     mockUserRepository.findByEmail.mockResolvedValueOnce({
       ...mockUserCreateRequest,
+      userType: 'broker',
       id: 'DUMMY_ID',
       password: 'hashed_password',
     })
@@ -62,6 +65,7 @@ describe('UserService', () => {
         email: mockUserCreateRequest.email,
         name: mockUserCreateRequest.name,
         phoneNumber: mockUserCreateRequest.phoneNumber,
+        userType: 'broker',
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' },
@@ -77,5 +81,29 @@ describe('UserService', () => {
     )
 
     expect(token).toBeNull()
+  })
+
+  it('should find user by phone number', async () => {
+    mockUserRepository.findByPhoneNumber.mockResolvedValueOnce({
+      ...mockUserCreateRequest,
+      userType: 'broker',
+      id: 'DUMMY_ID',
+      password: 'hashed_password',
+    })
+
+    const user = await userService.findUserByPhoneNumber(
+      mockUserCreateRequest.phoneNumber,
+    )
+
+    expect(mockUserRepository.findByPhoneNumber).toHaveBeenCalledWith(
+      mockUserCreateRequest.phoneNumber,
+    )
+
+    expect(user).toEqual({
+      ...mockUserCreateRequest,
+      userType: 'broker',
+      id: 'DUMMY_ID',
+      password: 'hashed_password',
+    })
   })
 })

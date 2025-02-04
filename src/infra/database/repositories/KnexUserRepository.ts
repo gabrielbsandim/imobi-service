@@ -14,13 +14,22 @@ export class KnexUserRepository implements IUserRepository {
       email: user.email,
       password: user.password,
       phone_number: user.phoneNumber,
+      user_type: user.userType,
     })
+  }
+
+  async findByPhoneNumber(phoneNumber: string) {
+    const user = await this.knex('users').where({ phoneNumber }).first()
+
+    if (!user) {
+      return null
+    }
+
+    return this.toDomain(user)
   }
 
   async findByEmail(email: string) {
     const user = await this.knex('users').where({ email }).first()
-
-    console.log(JSON.stringify(user, null, 2))
 
     if (!user) {
       return null
@@ -44,9 +53,10 @@ export class KnexUserRepository implements IUserRepository {
     return new UserEntity(
       raw.id,
       raw.name,
+      raw.phone_number,
+      raw.user_type,
       raw.email,
       raw.password,
-      raw.phone_number,
     )
   }
 }

@@ -6,13 +6,15 @@ import { HttpError } from '@/errors/HttpErrors'
 export const errorHandler = (err: Error, _req: Request, res: Response) => {
   console.error(err.stack)
 
-  if (err instanceof HttpError) {
-    res.status(err.statusCode).json({ error: err.message })
-    return
-  }
+  const { statusCode } = err as HttpError
 
   if (err instanceof ValidationError) {
     res.status(400).json({ errors: err.errors })
+    return
+  }
+
+  if (statusCode) {
+    res.status(statusCode).json({ error: err.message })
     return
   }
 

@@ -24,3 +24,9 @@ export class UnauthorizedError extends HttpError {
     super(message, 401)
   }
 }
+
+export class SendMessageError extends HttpError {
+  constructor() {
+    super('Falha ao enviar a mensagem', 401)
+  }
+}

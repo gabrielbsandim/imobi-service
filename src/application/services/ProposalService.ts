@@ -7,7 +7,7 @@ import {
 import { IListingRepository } from '@/domain/interfaces/IListingRepository'
 import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
-import { TwilioNotificationService } from '@/infra/services/TwilioNotificationService'
+import { WhatsAppIntegrationService } from '@/infra/services/WhatsAppIntegrationService'
 
 @injectable()
 export class ProposalService {
@@ -15,8 +15,8 @@ export class ProposalService {
     @inject('IProposalRepository')
     private proposalRepository: IProposalRepository,
     @inject('IListingRepository') private listingRepository: IListingRepository,
-    @inject('TwilioNotificationService')
-    private notificationService: TwilioNotificationService,
+    @inject('WhatsAppIntegrationService')
+    private whatsAppIntegrationService: WhatsAppIntegrationService,
   ) {}
 
   async create(
@@ -33,7 +33,7 @@ export class ProposalService {
       status: 'pending',
     })
 
-    await this.notificationService.sendWhatsAppMessage(
+    await this.whatsAppIntegrationService.sendMessage(
       listing.buyerPhoneNumber,
       `📩 Nova proposta para seu anúncio "${listing.description}"! Acesse o app para detalhes.`,
     )
