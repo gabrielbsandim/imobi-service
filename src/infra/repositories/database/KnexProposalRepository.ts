@@ -6,7 +6,7 @@ import {
   TCreateProposalRequest,
   TUpdateProposalStatus,
 } from '@/domain/entities/ProposalEntity'
-import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
+import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
 
 @injectable()
 export class KnexProposalRepository implements IProposalRepository {

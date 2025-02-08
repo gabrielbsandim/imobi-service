@@ -10,7 +10,7 @@ import {
   TListListingFilterRequest,
   TUpdateListingRequest,
 } from '@/domain/entities/ListingEntity'
-import { KnexListingRepository } from '@/infra/database/repositories/KnexListingRepository'
+import { KnexListingRepository } from '@/infra/repositories/database/KnexListingRepository'
 
 @injectable()
 export class ListingService {
@@ -40,5 +40,28 @@ export class ListingService {
     pagination: TPaginationRequest,
   ): Promise<IPaginationResponse<ListingEntity>> {
     return await this.listingRepository.list(filters, pagination)
+  }
+
+  isValidListing(data: Partial<ListingEntity>): data is TCreateListingRequest {
+    const requiredFields: Array<keyof TCreateListingRequest> = [
+      'buyerId',
+      'buyerPhoneNumber',
+      'transactionType',
+      'propertyType',
+      'city',
+      'description',
+    ]
+
+    const hasAllRequiredFields = requiredFields.every(
+      field => data[field] !== undefined,
+    )
+
+    const basicTypeChecks =
+      typeof data.transactionType === 'string' &&
+      typeof data.propertyType === 'string' &&
+      typeof data.city === 'string' &&
+      typeof data.description === 'string'
+
+    return hasAllRequiredFields && basicTypeChecks
   }
 }

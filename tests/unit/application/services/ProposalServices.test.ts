@@ -1,7 +1,6 @@
 import { container } from 'tsyringe'
 
 import { ProposalService } from '@/application/services/ProposalService'
-import { WhatsAppIntegrationService } from '@/infra/services/WhatsAppIntegrationService'
 import { mockListingRepository } from '@/tests/unit/mocks/Listing.mock'
 import {
   mockCreateProposalRequest,
@@ -9,17 +8,8 @@ import {
   mockProposalRepository,
 } from '@/tests/unit/mocks/Proposal.mock'
 
-const mockSendMessage = jest.fn()
-const mockWhatsAppIntegrationService: jest.Mocked<WhatsAppIntegrationService> =
-  {
-    sendMessage: mockSendMessage,
-  } as any
-
 container.register('IProposalRepository', { useValue: mockProposalRepository })
 container.register('IListingRepository', { useValue: mockListingRepository })
-container.register('WhatsAppIntegrationService', {
-  useValue: mockWhatsAppIntegrationService,
-})
 
 describe('ProposalService', () => {
   let proposalService: ProposalService
@@ -31,8 +21,6 @@ describe('ProposalService', () => {
 
   it('should create a proposal', async () => {
     const proposal = await proposalService.create(mockCreateProposalRequest)
-
-    expect(mockSendMessage).toHaveBeenCalled()
 
     expect(proposal.id).toBe(mockProposal.id)
 

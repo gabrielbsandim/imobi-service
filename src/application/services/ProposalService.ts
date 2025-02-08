@@ -4,10 +4,9 @@ import {
   ProposalEntity,
   TCreateProposalRequest,
 } from '@/domain/entities/ProposalEntity'
-import { IListingRepository } from '@/domain/interfaces/IListingRepository'
-import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
+import { IListingRepository } from '@/domain/interfaces/Repositories/database/IListingRepository'
+import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
-import { WhatsAppIntegrationService } from '@/infra/services/WhatsAppIntegrationService'
 
 @injectable()
 export class ProposalService {
@@ -15,8 +14,6 @@ export class ProposalService {
     @inject('IProposalRepository')
     private proposalRepository: IProposalRepository,
     @inject('IListingRepository') private listingRepository: IListingRepository,
-    @inject('WhatsAppIntegrationService')
-    private whatsAppIntegrationService: WhatsAppIntegrationService,
   ) {}
 
   async create(
@@ -32,11 +29,6 @@ export class ProposalService {
       ...proposal,
       status: 'pending',
     })
-
-    await this.whatsAppIntegrationService.sendMessage(
-      listing.buyerPhoneNumber,
-      `📩 Nova proposta para seu anúncio "${listing.description}"! Acesse o app para detalhes.`,
-    )
 
     return createdProposal
   }

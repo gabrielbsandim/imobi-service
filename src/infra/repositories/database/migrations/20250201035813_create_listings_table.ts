@@ -7,22 +7,18 @@ export async function up(knex: Knex): Promise<void> {
     table.string('buyer_phone_number').notNullable()
 
     table.enum('transaction_type', ['buy', 'rent']).notNullable()
-    table
-      .enum('property_type', ['house', 'apartment', 'land', 'commercial'])
-      .notNullable()
 
-    table.integer('bedrooms').nullable()
-    table.integer('bathrooms').nullable()
-    table.integer('parking_spaces').nullable()
-    table.integer('min_floor').nullable()
-    table.decimal('min_size_m2', 8, 2).nullable()
-    table.decimal('max_size_m2', 8, 2).nullable()
+    table.enum('property_type', ['house', 'apartment', 'studio']).nullable()
+
+    table.enum('bedrooms', [0, 1, 2, 3]).nullable()
+    table.enum('bathrooms', [0, 1, 2]).nullable()
+
+    table.enum('parking_spaces', [0, 1, 2]).nullable()
+    table.enum('size', [0, 1, 2, 3]).nullable()
 
     table.string('city', 100).notNullable()
-    table.string('neighborhood', 100).nullable()
 
-    table.decimal('max_price', 12, 2).nullable()
-    table.decimal('min_price', 12, 2).nullable()
+    table.enum('price', [0, 1, 2, 3]).nullable()
 
     table.text('description').notNullable()
 

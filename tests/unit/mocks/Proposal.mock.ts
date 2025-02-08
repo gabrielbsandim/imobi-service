@@ -2,7 +2,7 @@ import {
   ProposalEntity,
   TCreateProposalRequest,
 } from '@/domain/entities/ProposalEntity'
-import { IProposalRepository } from '@/domain/interfaces/IProposalRepository'
+import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
 
 export const mockCreateProposalRequest: jest.Mocked<
   Omit<TCreateProposalRequest, 'status'>

@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { injectable, inject } from 'tsyringe'
 
+import { AuthService } from '@/application/services/AuthService'
 import { UserService } from '@/application/services/UserService'
-import { UnauthorizedError } from '@/errors/HttpErrors'
 import { schemaValidator } from '@/presentation/schemas/schemaValidator'
 import {
-  loginSchema,
   registerSchema,
-  TLoginSchema,
   TRegisterSchema,
 } from '@/presentation/schemas/userSchema'
 
@@ -15,6 +13,7 @@ import {
 export class UserController {
   constructor(
     @inject('UserService') private readonly userService: UserService,
+    @inject('AuthService') private readonly authService: AuthService,
   ) {}
 
   async register(
@@ -28,28 +27,18 @@ export class UserController {
         req.body,
       )
 
-      await this.userService.register(validatedData)
+      const auth = await this.authService.register({
+        displayName: validatedData.name,
+        email: validatedData.email,
+        password: validatedData.password,
+      })
+
+      await this.userService.create({
+        ...validatedData,
+        id: auth.uid,
+      })
 
       res.status(201).json({ message: 'Usuário registrado com sucesso!' })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { email, password } = await schemaValidator<TLoginSchema>(
-        loginSchema,
-        req.body,
-      )
-
-      const token = await this.userService.login(email, password)
-
-      if (!token) {
-        throw new UnauthorizedError('Credenciais inválidas')
-      }
-
-      res.status(200).json({ token })
     } catch (error) {
       next(error)
     }

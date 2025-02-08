@@ -2,30 +2,20 @@ import { Knex } from 'knex'
 import { inject, injectable } from 'tsyringe'
 
 import { TCreateUserRequest, UserEntity } from '@/domain/entities/UserEntity'
-import { IUserRepository } from '@/domain/interfaces/IUserRepository'
+import { IUserRepository } from '@/domain/interfaces/Repositories/database/IUserRepository'
 
 @injectable()
 export class KnexUserRepository implements IUserRepository {
   constructor(@inject('Knex') private readonly knex: Knex) {}
 
-  async create(user: TCreateUserRequest): Promise<void> {
-    await this.knex('users').insert({
+  async create(user: TCreateUserRequest): Promise<UserEntity> {
+    return this.knex('users').insert({
+      id: user.id,
       name: user.name,
       email: user.email,
       password: user.password,
-      phone_number: user.phoneNumber,
       user_type: user.userType,
     })
-  }
-
-  async findByPhoneNumber(phoneNumber: string) {
-    const user = await this.knex('users').where({ phoneNumber }).first()
-
-    if (!user) {
-      return null
-    }
-
-    return this.toDomain(user)
   }
 
   async findByEmail(email: string) {

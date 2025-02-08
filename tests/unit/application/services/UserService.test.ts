@@ -1,26 +1,13 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import { container } from 'tsyringe'
 
 import { UserService } from '@/application/services/UserService'
-import { IUserRepository } from '@/domain/interfaces/IUserRepository'
-import { mockUserCreateRequest } from '@/tests/unit/mocks/User.mock'
+import { TCreateUserRequest } from '@/domain/entities/UserEntity'
+import { NotFoundError } from '@/errors/HttpErrors'
 
-const mockUserRepository: jest.Mocked<IUserRepository> = {
-  create: jest.fn(),
-  findByEmail: jest.fn(),
-  findByPhoneNumber: jest.fn(),
+const mockUserRepository = {
   findById: jest.fn(),
+  create: jest.fn(),
 }
-
-jest.mock('bcryptjs', () => ({
-  hash: jest.fn().mockResolvedValue('hashed_password'),
-  compare: jest.fn().mockResolvedValue(true),
-}))
-
-jest.mock('jsonwebtoken', () => ({
-  sign: jest.fn().mockReturnValue('fake_token'),
-}))
 
 container.register('IUserRepository', { useValue: mockUserRepository })
 
@@ -32,78 +19,49 @@ describe('UserService', () => {
     jest.clearAllMocks()
   })
 
-  it('should create user with a hash password and "userType" as "broker"', async () => {
-    await userService.register(mockUserCreateRequest)
+  describe('FindById', () => {
+    it('should return the user', async () => {
+      const mockUser = { id: '1', name: 'John Doe', email: 'john@example.com' }
 
-    expect(bcrypt.hash).toHaveBeenCalledWith(mockUserCreateRequest.password, 10)
+      mockUserRepository.findById.mockResolvedValue(mockUser)
 
-    expect(mockUserRepository.create).toHaveBeenCalledWith({
-      ...mockUserCreateRequest,
-      userType: 'broker',
-      password: 'hashed_password',
+      const result = await userService.findById('1')
+
+      expect(mockUserRepository.findById).toHaveBeenCalledWith('1')
+
+      expect(result).toEqual(mockUser)
+    })
+
+    it('should throw "NotFoundError" when the user is not found', async () => {
+      mockUserRepository.findById.mockResolvedValue(null)
+
+      await expect(userService.findById('non-existent-id')).rejects.toThrow(
+        NotFoundError,
+      )
+
+      await expect(userService.findById('non-existent-id')).rejects.toThrow(
+        'Usuário não encontrado',
+      )
     })
   })
 
-  it('should return a JWT token when the login was successfully', async () => {
-    mockUserRepository.findByEmail.mockResolvedValueOnce({
-      ...mockUserCreateRequest,
-      userType: 'broker',
-      id: 'DUMMY_ID',
-      password: 'hashed_password',
-    })
+  describe('Create', () => {
+    it('deve criar um usuário e retornar o resultado', async () => {
+      const newUser: TCreateUserRequest = {
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        password: 'secret',
+        id: 'DUMMY_ID',
+        userType: 'buyer',
+      }
 
-    const token = await userService.login(
-      mockUserCreateRequest.email,
-      mockUserCreateRequest.password,
-    )
+      mockUserRepository.create.mockResolvedValue(newUser)
 
-    expect(token).toBe('fake_token')
+      const result = await userService.create(newUser)
 
-    expect(jwt.sign).toHaveBeenCalledWith(
-      {
-        userId: 'DUMMY_ID',
-        email: mockUserCreateRequest.email,
-        name: mockUserCreateRequest.name,
-        phoneNumber: mockUserCreateRequest.phoneNumber,
-        userType: 'broker',
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-    )
-  })
+      expect(mockUserRepository.create).toHaveBeenCalledWith(newUser)
 
-  it('should return null when the email and password is wrong', async () => {
-    mockUserRepository.findByEmail.mockResolvedValueOnce(null)
-
-    const token = await userService.login(
-      'invalid@example.com',
-      'wrong_password',
-    )
-
-    expect(token).toBeNull()
-  })
-
-  it('should find user by phone number', async () => {
-    mockUserRepository.findByPhoneNumber.mockResolvedValueOnce({
-      ...mockUserCreateRequest,
-      userType: 'broker',
-      id: 'DUMMY_ID',
-      password: 'hashed_password',
-    })
-
-    const user = await userService.findUserByPhoneNumber(
-      mockUserCreateRequest.phoneNumber,
-    )
-
-    expect(mockUserRepository.findByPhoneNumber).toHaveBeenCalledWith(
-      mockUserCreateRequest.phoneNumber,
-    )
-
-    expect(user).toEqual({
-      ...mockUserCreateRequest,
-      userType: 'broker',
-      id: 'DUMMY_ID',
-      password: 'hashed_password',
+      expect(result).toEqual(newUser)
     })
   })
 })
