@@ -1,20 +1,28 @@
 import type { Config } from '@jest/types'
-import { pathsToModuleNameMapper } from 'ts-jest'
-
-import { compilerOptions } from './tsconfig.json'
 
 const config: Config.InitialOptions = {
+  clearMocks: true,
+  rootDir: '.',
   preset: 'ts-jest',
   testEnvironment: 'node',
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>/',
-  }),
-  globals: {
-    'ts-jest': {
-      tsconfig: './tsconfig.json',
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
+  moduleNameMapper: {
+    '^@/tests/(.*)$': '<rootDir>/tests/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  collectCoverageFrom: ['src'],
+  testPathIgnorePatterns: ['build'],
+  setupFiles: ['<rootDir>/tests/setup.ts'],
+  verbose: true,
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
-  setupFiles: ['<rootDir>/tests/setup.ts'],
 }
 
 export default config
