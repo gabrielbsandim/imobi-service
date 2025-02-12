@@ -12,10 +12,6 @@ export class ReviewService {
   ) {}
 
   async create(props: TCreateReview) {
-    if (props.rating < 1 || props.rating > 5) {
-      throw new BadRequestError('A nota deve estar entre 1 e 5.')
-    }
-
     const existingReview =
       await this.reviewRepository.findReviewByBuyerAndBroker({
         brokerId: props.brokerId,

@@ -54,15 +54,15 @@ export class ListingEntity {
   ) {}
 }
 
-export type TCreateListingRequest = Omit<
+export type TCreateListing = Omit<
   ListingEntity,
   'id' | 'createdAt' | 'updatedAt'
 >
 
-export type TUpdateListingRequest = Partial<
-  Omit<TCreateListingRequest, 'buyerId'>
->
+export type TUpdateListing = Partial<Omit<TCreateListing, 'buyerId'>>
 
-export type TListListingFilterRequest = Partial<
-  Omit<TCreateListingRequest, 'buyerId'>
->
+export type TListListingFilter = Partial<TUpdateListing> & {
+  excludeDisliked?: boolean
+  onlyFavorites?: boolean
+  onlyDisliked?: boolean
+}

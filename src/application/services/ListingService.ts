@@ -2,9 +2,9 @@ import { inject, injectable } from 'tsyringe'
 
 import {
   ListingEntity,
-  TCreateListingRequest,
-  TListListingFilterRequest,
-  TUpdateListingRequest,
+  TCreateListing,
+  TListListingFilter,
+  TUpdateListing,
 } from '@/domain/entities/ListingEntity'
 import {
   IPaginationResponse,
@@ -20,7 +20,7 @@ export class ListingService {
     private readonly listingRepository: KnexListingRepository,
   ) {}
 
-  async create(data: TCreateListingRequest) {
+  async create(data: TCreateListing) {
     return this.listingRepository.create(data)
   }
 
@@ -34,7 +34,7 @@ export class ListingService {
     return listing
   }
 
-  async update(id: string, updates: TUpdateListingRequest): Promise<void> {
+  async update(id: string, updates: TUpdateListing): Promise<void> {
     await this.listingRepository.update(id, updates)
   }
 
@@ -43,9 +43,10 @@ export class ListingService {
   }
 
   async list(
-    filters: TListListingFilterRequest,
+    filters: TListListingFilter,
     pagination: TPaginationRequest,
+    userId: string,
   ): Promise<IPaginationResponse<ListingEntity>> {
-    return this.listingRepository.list(filters, pagination)
+    return this.listingRepository.list(filters, pagination, userId)
   }
 }

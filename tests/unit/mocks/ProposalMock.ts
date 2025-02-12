@@ -1,11 +1,11 @@
 import {
   ProposalEntity,
-  TCreateProposalRequest,
+  TCreateProposal,
 } from '@/domain/entities/ProposalEntity'
 import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
 
 export const mockCreateProposalRequest: jest.Mocked<
-  Omit<TCreateProposalRequest, 'status'>
+  Omit<TCreateProposal, 'status'>
 > = {
   listingId: 'listing_456',
   brokerId: 'broker_789',

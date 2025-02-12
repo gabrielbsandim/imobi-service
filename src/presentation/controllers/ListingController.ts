@@ -104,7 +104,11 @@ export class ListingController {
           req.body,
         )
 
-      const listing = await this.listingService.list(filters, pagination)
+      const listing = await this.listingService.list(
+        filters,
+        pagination,
+        req.user!.id,
+      )
 
       res.status(200).json(listing)
     } catch (error) {

@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe'
 
 import {
   ProposalEntity,
-  TCreateProposalRequest,
+  TCreateProposal,
   TUpdateProposalStatus,
 } from '@/domain/entities/ProposalEntity'
 import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
@@ -13,7 +13,7 @@ import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
 export class KnexProposalRepository implements IProposalRepository {
   constructor(@inject('Knex') private knex: Knex) {}
 
-  async create(proposalData: TCreateProposalRequest): Promise<ICreationResult> {
+  async create(proposalData: TCreateProposal): Promise<ICreationResult> {
     const [proposalId] = await this.knex('proposals')
       .insert({
         listing_id: proposalData.listingId,

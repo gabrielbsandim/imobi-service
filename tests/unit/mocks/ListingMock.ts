@@ -1,14 +1,14 @@
 import {
   EBathroom,
   ListingEntity,
-  TCreateListingRequest,
-  TListListingFilterRequest,
-  TUpdateListingRequest,
+  TCreateListing,
+  TListListingFilter,
+  TUpdateListing,
 } from '@/domain/entities/ListingEntity'
 import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
 import { IPaginationResponse } from '@/domain/interfaces/shared/IPagination'
 
-export const mockCreateListingRequest: jest.Mocked<TCreateListingRequest> = {
+export const mockCreateListingRequest: jest.Mocked<TCreateListing> = {
   buyerId: '123',
   buyerPhoneNumber: '+5511999999999',
   transactionType: 'buy',
@@ -18,7 +18,7 @@ export const mockCreateListingRequest: jest.Mocked<TCreateListingRequest> = {
   bathrooms: EBathroom.TWO,
 }
 
-export const mockUpdateListingRequest: jest.Mocked<TUpdateListingRequest> = {
+export const mockUpdateListingRequest: jest.Mocked<TUpdateListing> = {
   transactionType: 'buy',
   propertyType: 'apartment',
   city: 'São Paulo',
@@ -26,12 +26,11 @@ export const mockUpdateListingRequest: jest.Mocked<TUpdateListingRequest> = {
   bathrooms: EBathroom.TWO,
 }
 
-export const mockListingFilterRequest: jest.Mocked<TListListingFilterRequest> =
-  {
-    propertyType: 'apartment',
-    city: 'São Paulo',
-    bathrooms: EBathroom.TWO,
-  }
+export const mockListingFilterRequest: jest.Mocked<TListListingFilter> = {
+  propertyType: 'apartment',
+  city: 'São Paulo',
+  bathrooms: EBathroom.TWO,
+}
 
 export const mockListing: jest.Mocked<ListingEntity> = {
   ...mockCreateListingRequest,

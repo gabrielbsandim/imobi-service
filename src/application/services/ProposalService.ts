@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe'
 
 import {
   ProposalEntity,
-  TCreateProposalRequest,
+  TCreateProposal,
 } from '@/domain/entities/ProposalEntity'
 import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
 import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
@@ -16,7 +16,7 @@ export class ProposalService {
     @inject('IListingRepository') private listingRepository: IListingRepository,
   ) {}
 
-  async create(proposal: Omit<TCreateProposalRequest, 'status'>) {
+  async create(proposal: Omit<TCreateProposal, 'status'>) {
     const listing = await this.listingRepository.findById(proposal.listingId)
 
     if (!listing) {

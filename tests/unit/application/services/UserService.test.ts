@@ -2,7 +2,7 @@ import { container } from 'tsyringe'
 
 import { UserService } from '@/application/services/UserService'
 import { NotFoundError } from '@/errors/HttpErrors'
-import { mockUserCreateRequest } from '@/tests/unit/mocks/User.mock'
+import { mockUserCreateRequest } from '@/tests/unit/mocks/UserMMock'
 
 const mockUserRepository = {
   findById: jest.fn().mockResolvedValue(mockUserCreateRequest),

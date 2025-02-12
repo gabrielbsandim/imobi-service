@@ -3,9 +3,9 @@ import { inject, injectable } from 'tsyringe'
 
 import {
   ListingEntity,
-  TCreateListingRequest,
-  TListListingFilterRequest,
-  TUpdateListingRequest,
+  TCreateListing,
+  TListListingFilter,
+  TUpdateListing,
 } from '@/domain/entities/ListingEntity'
 import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
 import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
@@ -19,7 +19,7 @@ import { removeUndefinedProps } from '@/utils/removeUndefinedProps'
 export class KnexListingRepository implements IListingRepository {
   constructor(@inject('Knex') private readonly knex: Knex) {}
 
-  async create(listing: TCreateListingRequest): Promise<ICreationResult> {
+  async create(listing: TCreateListing): Promise<ICreationResult> {
     const [id] = await this.knex('listings')
       .insert({
         buyer_id: listing.buyerId,
@@ -48,7 +48,7 @@ export class KnexListingRepository implements IListingRepository {
     return this.toDomain(listing)
   }
 
-  async update(id: string, updates: TUpdateListingRequest): Promise<void> {
+  async update(id: string, updates: TUpdateListing): Promise<void> {
     const filteredUpdates = removeUndefinedProps({
       transaction_type: updates.transactionType,
       property_type: updates.propertyType,
@@ -70,10 +70,11 @@ export class KnexListingRepository implements IListingRepository {
   }
 
   async list(
-    filters: TListListingFilterRequest,
+    filters: TListListingFilter,
     pagination: TPaginationRequest,
+    userId: string,
   ): Promise<IPaginationResponse<ListingEntity>> {
-    const { offset = 0, limit = 10 } = pagination || {}
+    const { offset = 0, limit = 10 } = pagination
 
     const query = this.knex('listings').select('*')
 
@@ -103,6 +104,24 @@ export class KnexListingRepository implements IListingRepository {
     }
     if (filters.description) {
       query.where('description', 'ilike', `%${filters.description}%`)
+    }
+
+    if (filters.excludeDisliked) {
+      query.whereNotIn('id', function () {
+        this.select('listing_id').from('dislikes').where('seller_id', userId)
+      })
+    }
+
+    if (filters.onlyFavorites) {
+      query.whereIn('id', function () {
+        this.select('listing_id').from('favorites').where('seller_id', userId)
+      })
+    }
+
+    if (filters.onlyDisliked) {
+      query.whereIn('id', function () {
+        this.select('listing_id').from('dislikes').where('seller_id', userId)
+      })
     }
 
     const totalResult = await query

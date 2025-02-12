@@ -33,12 +33,28 @@ export class UserController {
         password: validatedData.password,
       })
 
-      await this.userService.create({
+      const created = await this.userService.create({
         ...validatedData,
         id: auth.uid,
       })
 
-      res.status(201).json({ message: 'Usuário registrado com sucesso!' })
+      res.status(201).json(created)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async findById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { userId } = req.params
+
+      const user = await this.userService.findById(userId)
+
+      res.status(200).json(user)
     } catch (error) {
       next(error)
     }

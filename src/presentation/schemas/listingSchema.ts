@@ -12,7 +12,7 @@ export const createListingSchema = yup.object().shape({
     .required('Tipo de transação é obrigatório'),
   propertyType: yup
     .mixed<TPropertyType>()
-    .oneOf(['house', 'apartment', 'land', 'commercial'])
+    .oneOf(['house', 'apartment', 'studio'])
     .required('Tipo de imóvel é obrigatório'),
   city: yup.string().required('Cidade é obrigatória'),
   description: yup.string().required('Descrição é obrigatória'),
@@ -35,7 +35,7 @@ export const updateListingSchema = yup.object().shape({
     .optional(),
   propertyType: yup
     .mixed<TPropertyType>()
-    .oneOf(['house', 'apartment', 'land', 'commercial'])
+    .oneOf(['house', 'apartment', 'studio'])
     .optional(),
   city: yup.string().optional(),
   description: yup.string().optional(),
@@ -59,7 +59,7 @@ export const listFilterListingSchema = yup.object().shape({
       .optional(),
     propertyType: yup
       .mixed<TPropertyType>()
-      .oneOf(['house', 'apartment', 'land', 'commercial'])
+      .oneOf(['house', 'apartment', 'studio'])
       .optional(),
     city: yup.string().optional(),
     description: yup.string().optional(),
@@ -72,6 +72,9 @@ export const listFilterListingSchema = yup.object().shape({
     maxSizeM2: yup.number().min(0).optional(),
     parkingSpaces: yup.number().min(0).optional(),
     minFloor: yup.number().min(0).optional(),
+    excludeDisliked: yup.boolean().optional(),
+    onlyFavorites: yup.boolean().optional(),
+    onlyDisliked: yup.boolean().optional(),
   }),
   pagination: yup.object().shape({
     offset: yup.number().min(1).required('Offset é obrigatório.'),

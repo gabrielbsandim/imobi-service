@@ -13,7 +13,7 @@ export class ProposalEntity {
   ) {}
 }
 
-export type TCreateProposalRequest = Omit<
+export type TCreateProposal = Omit<
   ProposalEntity,
   'id' | 'createdAt' | 'updatedAt'
 >

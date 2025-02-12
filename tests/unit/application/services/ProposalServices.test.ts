@@ -1,12 +1,12 @@
 import { container } from 'tsyringe'
 
 import { ProposalService } from '@/application/services/ProposalService'
-import { mockListingRepository } from '@/tests/unit/mocks/Listing.mock'
+import { mockListingRepository } from '@/tests/unit/mocks/ListingMock'
 import {
   mockCreateProposalRequest,
   mockProposal,
   mockProposalRepository,
-} from '@/tests/unit/mocks/Proposal.mock'
+} from '@/tests/unit/mocks/ProposalMock'
 
 container.register('IProposalRepository', { useValue: mockProposalRepository })
 container.register('IListingRepository', { useValue: mockListingRepository })

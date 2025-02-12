@@ -7,5 +7,6 @@ const router = Router()
 const userController = container.resolve(UserController)
 
 router.post('/register', userController.register.bind(userController))
+router.get('/users/:userId', userController.findById.bind(userController))
 
 export default router

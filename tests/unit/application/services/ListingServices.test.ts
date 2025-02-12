@@ -8,7 +8,7 @@ import {
   mockListingRepository,
   mockListListing,
   mockUpdateListingRequest,
-} from '@/tests/unit/mocks/Listing.mock'
+} from '@/tests/unit/mocks/ListingMock'
 
 container.register('IListingRepository', { useValue: mockListingRepository })
 
@@ -54,10 +54,16 @@ describe('ListingService', () => {
   })
 
   it('should list listings with filter', async () => {
-    const response = await listingService.list(mockListingFilterRequest, {
-      limit: 10,
-      offset: 0,
-    })
+    const mockUserId = 'user_id'
+
+    const response = await listingService.list(
+      mockListingFilterRequest,
+      {
+        limit: 10,
+        offset: 0,
+      },
+      mockUserId,
+    )
 
     expect(mockListingRepository.list).toHaveBeenCalledWith(
       mockListingFilterRequest,
@@ -65,6 +71,7 @@ describe('ListingService', () => {
         limit: 10,
         offset: 0,
       },
+      mockUserId,
     )
 
     expect(response).toEqual(mockListListing)
