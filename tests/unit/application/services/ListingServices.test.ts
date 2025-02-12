@@ -21,9 +21,9 @@ describe('ListingService', () => {
   })
 
   it('should create listing', async () => {
-    const listing = await listingService.create(mockCreateListingRequest)
+    const created = await listingService.create(mockCreateListingRequest)
 
-    expect(listing).toHaveProperty('id', mockListing.id)
+    expect(created).toHaveProperty('id', mockListing.id)
 
     expect(mockListingRepository.create).toHaveBeenCalledWith(
       mockCreateListingRequest,

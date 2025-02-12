@@ -2,7 +2,7 @@ import { auth } from 'firebase-admin'
 import { injectable } from 'tsyringe'
 
 import { TCreateUserAuth } from '@/domain/entities/UserEntity'
-import { IFirebaseAuthRepository } from '@/domain/interfaces/Repositories/firebase/IFirebaseRepository'
+import { IFirebaseAuthRepository } from '@/domain/interfaces/repositories/firebase/IFirebaseRepository'
 
 @injectable()
 export class FirebaseAuthRepository implements IFirebaseAuthRepository {

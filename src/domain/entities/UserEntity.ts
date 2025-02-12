@@ -12,7 +12,7 @@ export class UserEntity {
   ) {}
 }
 
-export type TCreateUserRequest = Omit<UserEntity, 'createdAt' | 'updatedAt'>
+export type TCreateUser = Omit<UserEntity, 'createdAt' | 'updatedAt'>
 
 export type TCreateUserAuth = Pick<UserEntity, 'email' | 'password'> & {
   displayName: string

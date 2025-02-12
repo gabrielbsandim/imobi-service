@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe'
 
-import { TCreateUserRequest } from '@/domain/entities/UserEntity'
-import { IUserRepository } from '@/domain/interfaces/Repositories/database/IUserRepository'
+import { TCreateUser } from '@/domain/entities/UserEntity'
+import { IUserRepository } from '@/domain/interfaces/repositories/database/IUserRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
 
 @injectable()
@@ -20,7 +20,7 @@ export class UserService {
     return user
   }
 
-  async create(user: TCreateUserRequest) {
+  async create(user: TCreateUser) {
     return this.userRepository.create(user)
   }
 }

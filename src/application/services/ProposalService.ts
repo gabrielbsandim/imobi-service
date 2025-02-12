@@ -4,8 +4,8 @@ import {
   ProposalEntity,
   TCreateProposalRequest,
 } from '@/domain/entities/ProposalEntity'
-import { IListingRepository } from '@/domain/interfaces/Repositories/database/IListingRepository'
-import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
+import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
+import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
 
 @injectable()
@@ -16,24 +16,22 @@ export class ProposalService {
     @inject('IListingRepository') private listingRepository: IListingRepository,
   ) {}
 
-  async create(
-    proposal: Omit<TCreateProposalRequest, 'status'>,
-  ): Promise<ProposalEntity> {
+  async create(proposal: Omit<TCreateProposalRequest, 'status'>) {
     const listing = await this.listingRepository.findById(proposal.listingId)
 
     if (!listing) {
       throw new NotFoundError('Anúncio não encontrado')
     }
 
-    const createdProposal = await this.proposalRepository.create({
+    const created = await this.proposalRepository.create({
       ...proposal,
       status: 'pending',
     })
 
-    return createdProposal
+    return created
   }
 
-  async accept(proposalId: string): Promise<ProposalEntity> {
+  async accept(proposalId: string): Promise<void> {
     const proposal = await this.proposalRepository.findProposalById(proposalId)
 
     if (!proposal) {
@@ -46,7 +44,7 @@ export class ProposalService {
     })
   }
 
-  async reject(proposalId: string): Promise<ProposalEntity> {
+  async reject(proposalId: string): Promise<void> {
     const proposal = await this.proposalRepository.findProposalById(proposalId)
 
     if (!proposal) {

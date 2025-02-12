@@ -26,13 +26,13 @@ export class ListingController {
         req.body,
       )
 
-      const listing = await this.listingService.create({
+      const response = await this.listingService.create({
         ...validatedData,
         buyerId: req.user!.userId!,
         buyerPhoneNumber: req.user!.phoneNumber!,
       })
 
-      res.status(201).json(listing)
+      res.status(201).json(response)
     } catch (error) {
       next(error)
     }
@@ -51,9 +51,9 @@ export class ListingController {
         req.body,
       )
 
-      const listing = await this.listingService.update(id, validatedData)
+      await this.listingService.update(id, validatedData)
 
-      res.status(201).json(listing)
+      res.status(204).send()
     } catch (error) {
       next(error)
     }
@@ -70,7 +70,7 @@ export class ListingController {
       const listing = await this.listingService.findById(id)
 
       if (listing) {
-        res.json(listing)
+        res.status(200).json(listing)
         return
       }
 
@@ -106,7 +106,7 @@ export class ListingController {
 
       const listing = await this.listingService.list(filters, pagination)
 
-      res.status(201).json(listing)
+      res.status(200).json(listing)
     } catch (error) {
       next(error)
     }

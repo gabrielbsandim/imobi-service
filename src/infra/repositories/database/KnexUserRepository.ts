@@ -1,41 +1,38 @@
 import { Knex } from 'knex'
 import { inject, injectable } from 'tsyringe'
 
-import { TCreateUserRequest, UserEntity } from '@/domain/entities/UserEntity'
-import { IUserRepository } from '@/domain/interfaces/Repositories/database/IUserRepository'
+import { TCreateUser, UserEntity } from '@/domain/entities/UserEntity'
+import { IUserRepository } from '@/domain/interfaces/repositories/database/IUserRepository'
+import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
 
 @injectable()
 export class KnexUserRepository implements IUserRepository {
   constructor(@inject('Knex') private readonly knex: Knex) {}
 
-  async create(user: TCreateUserRequest): Promise<UserEntity> {
-    return this.knex('users').insert({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      user_type: user.userType,
-    })
+  async create(user: TCreateUser): Promise<ICreationResult> {
+    const [userId] = await this.knex('users')
+      .insert({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        user_type: user.userType,
+      })
+      .returning('id')
+
+    return userId
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await this.knex('users').where({ email }).first()
 
-    if (!user) {
-      return null
-    }
-
-    return this.toDomain(user)
+    return user ? this.toDomain(user) : null
   }
 
-  async findById(userId: string) {
+  async findById(userId: string): Promise<UserEntity | null> {
     const user = this.knex('users').where({ id: userId }).first()
 
-    if (!user) {
-      return null
-    }
-
-    return this.toDomain(user)
+    return user ? this.toDomain(user) : null
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

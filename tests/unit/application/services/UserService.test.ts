@@ -1,12 +1,12 @@
 import { container } from 'tsyringe'
 
 import { UserService } from '@/application/services/UserService'
-import { TCreateUserRequest } from '@/domain/entities/UserEntity'
 import { NotFoundError } from '@/errors/HttpErrors'
+import { mockUserCreateRequest } from '@/tests/unit/mocks/User.mock'
 
 const mockUserRepository = {
-  findById: jest.fn(),
-  create: jest.fn(),
+  findById: jest.fn().mockResolvedValue(mockUserCreateRequest),
+  create: jest.fn().mockResolvedValue({ id: mockUserCreateRequest.id }),
 }
 
 container.register('IUserRepository', { useValue: mockUserRepository })
@@ -21,15 +21,13 @@ describe('UserService', () => {
 
   describe('FindById', () => {
     it('should return the user', async () => {
-      const mockUser = { id: '1', name: 'John Doe', email: 'john@example.com' }
+      const result = await userService.findById(mockUserCreateRequest.id)
 
-      mockUserRepository.findById.mockResolvedValue(mockUser)
+      expect(mockUserRepository.findById).toHaveBeenCalledWith(
+        mockUserCreateRequest.id,
+      )
 
-      const result = await userService.findById('1')
-
-      expect(mockUserRepository.findById).toHaveBeenCalledWith('1')
-
-      expect(result).toEqual(mockUser)
+      expect(result).toEqual(mockUserCreateRequest)
     })
 
     it('should throw "NotFoundError" when the user is not found', async () => {
@@ -46,22 +44,16 @@ describe('UserService', () => {
   })
 
   describe('Create', () => {
-    it('deve criar um usuário e retornar o resultado', async () => {
-      const newUser: TCreateUserRequest = {
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        password: 'secret',
-        id: 'DUMMY_ID',
-        userType: 'buyer',
-      }
+    it('should create an user and return the result', async () => {
+      const result = await userService.create(mockUserCreateRequest)
 
-      mockUserRepository.create.mockResolvedValue(newUser)
+      expect(mockUserRepository.create).toHaveBeenCalledWith(
+        mockUserCreateRequest,
+      )
 
-      const result = await userService.create(newUser)
-
-      expect(mockUserRepository.create).toHaveBeenCalledWith(newUser)
-
-      expect(result).toEqual(newUser)
+      expect(result).toStrictEqual({
+        id: mockUserCreateRequest.id,
+      })
     })
   })
 })

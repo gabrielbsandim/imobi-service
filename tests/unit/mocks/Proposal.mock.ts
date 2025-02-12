@@ -2,7 +2,7 @@ import {
   ProposalEntity,
   TCreateProposalRequest,
 } from '@/domain/entities/ProposalEntity'
-import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
+import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
 
 export const mockCreateProposalRequest: jest.Mocked<
   Omit<TCreateProposalRequest, 'status'>
@@ -20,7 +20,9 @@ export const mockProposal: jest.Mocked<ProposalEntity> = {
 }
 
 export const mockProposalRepository: jest.Mocked<IProposalRepository> = {
-  create: jest.fn().mockResolvedValue(mockProposal),
+  create: jest.fn().mockResolvedValue({
+    id: mockProposal.id,
+  }),
   listProposalsByListingId: jest.fn().mockResolvedValue([mockProposal]),
   updateProposalStatus: jest.fn().mockResolvedValue({
     ...mockProposal,

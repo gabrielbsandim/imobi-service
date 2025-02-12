@@ -21,13 +21,13 @@ export class ProposalController {
         req.body,
       )
 
-      const proposal = await this.proposalService.create({
+      const proposalResponse = await this.proposalService.create({
         ...validatedData,
         listingId: req.params.listingId,
         brokerId: req.user!.userId!,
       })
 
-      res.status(201).json(proposal)
+      res.status(201).json(proposalResponse)
     } catch (error) {
       next(error)
     }
@@ -35,9 +35,9 @@ export class ProposalController {
 
   async acceptProposal(req: Request, res: Response, next: NextFunction) {
     try {
-      const proposal = await this.proposalService.accept(req.params.proposalId)
+      await this.proposalService.accept(req.params.proposalId)
 
-      res.json(proposal)
+      res.status(204).send()
     } catch (error) {
       next(error)
     }
@@ -45,9 +45,9 @@ export class ProposalController {
 
   async rejectProposal(req: Request, res: Response, next: NextFunction) {
     try {
-      const proposal = await this.proposalService.reject(req.params.proposalId)
+      await this.proposalService.reject(req.params.proposalId)
 
-      res.json(proposal)
+      res.status(204).send()
     } catch (error) {
       next(error)
     }
@@ -63,7 +63,7 @@ export class ProposalController {
         req.params.listingId,
       )
 
-      res.json(proposals)
+      res.status(200).json(proposals)
     } catch (error) {
       next(error)
     }

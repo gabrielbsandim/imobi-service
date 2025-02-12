@@ -1,8 +1,15 @@
-import { TCreateBrokerUserRequest } from '@/domain/entities/UserEntity'
+import { TCreateUser, TCreateUserAuth } from '@/domain/entities/UserEntity'
 
-export const mockUserCreateRequest: jest.Mocked<TCreateBrokerUserRequest> = {
+export const mockUserCreateRequest: jest.Mocked<TCreateUser> = {
   name: 'DUMMY_NAME',
   email: 'dummy@email.com',
   password: 'DUMMY_PASSWORD',
-  phoneNumber: '+5511999999999',
+  id: 'USER_ID',
+  userType: 'buyer',
+}
+
+export const mockCreateUserAuth: jest.Mocked<TCreateUserAuth> = {
+  displayName: 'Name Test',
+  email: 'dummy@email.com',
+  password: 'DUMMY_PASSWORD',
 }

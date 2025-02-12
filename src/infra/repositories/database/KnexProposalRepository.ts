@@ -6,14 +6,15 @@ import {
   TCreateProposalRequest,
   TUpdateProposalStatus,
 } from '@/domain/entities/ProposalEntity'
-import { IProposalRepository } from '@/domain/interfaces/Repositories/database/IProposalRepository'
+import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
+import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
 
 @injectable()
 export class KnexProposalRepository implements IProposalRepository {
   constructor(@inject('Knex') private knex: Knex) {}
 
-  async create(proposalData: TCreateProposalRequest): Promise<ProposalEntity> {
-    const [proposal] = await this.knex('proposals')
+  async create(proposalData: TCreateProposalRequest): Promise<ICreationResult> {
+    const [proposalId] = await this.knex('proposals')
       .insert({
         listing_id: proposalData.listingId,
         broker_id: proposalData.brokerId,
@@ -21,9 +22,9 @@ export class KnexProposalRepository implements IProposalRepository {
         photo_urls: proposalData.photoUrls,
         status: proposalData.status,
       })
-      .returning('*')
+      .returning('id')
 
-    return this.toDomain(proposal)
+    return proposalId
   }
 
   async listProposalsByListingId(listingId: string): Promise<ProposalEntity[]> {
@@ -37,13 +38,8 @@ export class KnexProposalRepository implements IProposalRepository {
   async updateProposalStatus({
     id,
     status,
-  }: TUpdateProposalStatus): Promise<ProposalEntity> {
-    const [proposal] = await this.knex('proposals')
-      .where('id', id)
-      .update({ status })
-      .returning('*')
-
-    return this.toDomain(proposal)
+  }: TUpdateProposalStatus): Promise<void> {
+    await this.knex('proposals').where('id', id).update({ status })
   }
 
   async findProposalById(proposalId: string): Promise<ProposalEntity | null> {

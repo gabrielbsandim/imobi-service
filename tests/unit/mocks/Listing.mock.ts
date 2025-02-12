@@ -1,4 +1,3 @@
-import { IPaginationResponse } from '@/domain/application/pagination.types'
 import {
   EBathroom,
   ListingEntity,
@@ -6,7 +5,8 @@ import {
   TListListingFilterRequest,
   TUpdateListingRequest,
 } from '@/domain/entities/ListingEntity'
-import { IListingRepository } from '@/domain/interfaces/Repositories/database/IListingRepository'
+import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
+import { IPaginationResponse } from '@/domain/interfaces/shared/IPagination'
 
 export const mockCreateListingRequest: jest.Mocked<TCreateListingRequest> = {
   buyerId: '123',
@@ -49,7 +49,9 @@ export const mockListListing: jest.Mocked<IPaginationResponse<ListingEntity>> =
   }
 
 export const mockListingRepository: jest.Mocked<IListingRepository> = {
-  create: jest.fn().mockResolvedValue(mockListing),
+  create: jest.fn().mockResolvedValue({
+    id: mockListing.id,
+  }),
   list: jest.fn().mockResolvedValue(mockListListing),
   findById: jest.fn().mockResolvedValue(mockListing),
   delete: jest.fn(),

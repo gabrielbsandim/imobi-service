@@ -20,9 +20,11 @@ describe('ProposalService', () => {
   })
 
   it('should create a proposal', async () => {
-    const proposal = await proposalService.create(mockCreateProposalRequest)
+    const created = await proposalService.create(mockCreateProposalRequest)
 
-    expect(proposal.id).toBe(mockProposal.id)
+    expect(created).toStrictEqual({
+      id: mockProposal.id,
+    })
 
     expect(mockProposalRepository.create).toHaveBeenCalledWith({
       ...mockCreateProposalRequest,
@@ -31,9 +33,7 @@ describe('ProposalService', () => {
   })
 
   it('should accept a proposal', async () => {
-    const proposal = await proposalService.accept(mockProposal.id)
-
-    expect(proposal.status).toBe('accepted')
+    await proposalService.accept(mockProposal.id)
 
     expect(mockProposalRepository.updateProposalStatus).toHaveBeenCalledWith({
       id: mockProposal.id,

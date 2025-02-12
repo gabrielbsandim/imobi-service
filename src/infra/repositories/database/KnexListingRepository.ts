@@ -2,24 +2,25 @@ import { Knex } from 'knex'
 import { inject, injectable } from 'tsyringe'
 
 import {
-  IPaginationResponse,
-  TPaginationRequest,
-} from '@/domain/application/pagination.types'
-import {
   ListingEntity,
   TCreateListingRequest,
   TListListingFilterRequest,
   TUpdateListingRequest,
 } from '@/domain/entities/ListingEntity'
-import { IListingRepository } from '@/domain/interfaces/Repositories/database/IListingRepository'
+import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
+import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
+import {
+  IPaginationResponse,
+  TPaginationRequest,
+} from '@/domain/interfaces/shared/IPagination'
 import { removeUndefinedProps } from '@/utils/removeUndefinedProps'
 
 @injectable()
 export class KnexListingRepository implements IListingRepository {
   constructor(@inject('Knex') private readonly knex: Knex) {}
 
-  async create(listing: TCreateListingRequest): Promise<ListingEntity> {
-    const [createdListing] = await this.knex('listings')
+  async create(listing: TCreateListingRequest): Promise<ICreationResult> {
+    const [id] = await this.knex('listings')
       .insert({
         buyer_id: listing.buyerId,
         transaction_type: listing.transactionType,
@@ -32,8 +33,9 @@ export class KnexListingRepository implements IListingRepository {
         bathrooms: listing.bathrooms,
         parking_spaces: listing.parkingSpaces,
       })
-      .returning('*')
-    return createdListing
+      .returning('id')
+
+    return id
   }
 
   async findById(id: string): Promise<ListingEntity | null> {
