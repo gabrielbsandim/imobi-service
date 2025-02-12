@@ -1,4 +1,4 @@
-import { auth } from 'firebase-admin'
+import admin from 'firebase-admin'
 import { injectable } from 'tsyringe'
 
 import { TCreateUserAuth } from '@/domain/entities/UserEntity'
@@ -6,15 +6,25 @@ import { IFirebaseAuthRepository } from '@/domain/interfaces/repositories/fireba
 
 @injectable()
 export class FirebaseAuthRepository implements IFirebaseAuthRepository {
+  constructor() {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      }),
+    })
+  }
+
   async verifyToken(token: string) {
-    return auth().verifyIdToken(token)
+    return admin.auth().verifyIdToken(token)
   }
 
   async createFirebaseUser(userAuth: TCreateUserAuth) {
-    return auth().createUser(userAuth)
+    return admin.auth().createUser(userAuth)
   }
 
   async deleteFirebaseUser(uid: string) {
-    return auth().deleteUser(uid)
+    return admin.auth().deleteUser(uid)
   }
 }

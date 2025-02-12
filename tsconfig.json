@@ -27,5 +27,9 @@
         "../tests/*"
       ]
     }
-  }
+  },
+  "include": [
+    "src",
+    "tests"
+  ]
 }
