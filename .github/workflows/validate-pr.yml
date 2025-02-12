@@ -1,0 +1,30 @@
+name: Validate PR
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  BRANCH: ${{ github.ref }}
+
+jobs:
+  validate_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone main repo
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 23
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Lint
+        run: yarn lint
+
+      - name: 'Test'
+        run: yarn test
