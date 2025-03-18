@@ -1,4 +1,6 @@
-import { TUserType } from '@/domain/entities/UserEntity'
+import { Express } from 'express-serve-static-core'
+
+import { TUserType, UserEntity } from '@/domain/entities/UserEntity'
 
 declare global {
   namespace Express {
@@ -6,6 +8,7 @@ declare global {
       userId?: string
       userEmail?: string
       userType?: TUserType
+      user?: UserEntity
     }
   }
 }

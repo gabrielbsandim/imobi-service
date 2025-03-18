@@ -25,5 +25,10 @@ export const errorHandler = (
     return
   }
 
-  res.status(500).json({ error: err.message || 'Erro interno do servidor' })
+  if (err instanceof Error) {
+    res.status(500).json({ error: err.message })
+    return
+  }
+
+  res.status(500).json({ error: 'Unknown error' })
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ValidationError } from 'yup'
 
 import { HttpError } from '@/errors/HttpErrors'
@@ -7,6 +7,7 @@ import { errorHandler } from '@/presentation/middlewares/errorHandler'
 describe('ErrorHandler', () => {
   let req: Partial<Request>
   let res: Partial<Response>
+  let next: NextFunction
   let consoleErrorSpy: jest.SpyInstance
 
   beforeEach(() => {
@@ -14,7 +15,9 @@ describe('ErrorHandler', () => {
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      setHeader: jest.fn(),
     }
+    next = jest.fn()
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -25,7 +28,7 @@ describe('ErrorHandler', () => {
   it('should handle HttpError correctly', () => {
     const httpError = new HttpError('Not Found', 404)
 
-    errorHandler(httpError, req as Request, res as Response)
+    errorHandler(httpError, req as Request, res as Response, next)
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(httpError.stack)
     expect(res.status).toHaveBeenCalledWith(404)
@@ -39,7 +42,7 @@ describe('ErrorHandler', () => {
       'field',
     )
 
-    errorHandler(validationError, req as Request, res as Response)
+    errorHandler(validationError, req as Request, res as Response, next)
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(validationError.stack)
     expect(res.status).toHaveBeenCalledWith(400)
@@ -49,7 +52,7 @@ describe('ErrorHandler', () => {
   it('should handle generic error correctly', () => {
     const genericError = new Error('Generic error')
 
-    errorHandler(genericError, req as Request, res as Response)
+    errorHandler(genericError, req as Request, res as Response, next)
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(genericError.stack)
     expect(res.status).toHaveBeenCalledWith(500)
@@ -59,7 +62,7 @@ describe('ErrorHandler', () => {
   it('should return "Unknown error" for a object that it is not an instance of Error', () => {
     const unknownError = {} as unknown as Error
 
-    errorHandler(unknownError, req as Request, res as Response)
+    errorHandler(unknownError, req as Request, res as Response, next)
 
     expect(consoleErrorSpy).toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(500)

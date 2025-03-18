@@ -19,22 +19,48 @@ export class EmailService implements IEmailService {
   }
 
   private async initializeTransporter(): Promise<void> {
-    // Em ambiente de desenvolvimento, use o Ethereal Email
-    if (this.isDevelopment) {
-      // Cria uma conta de teste no Ethereal Email
-      const testAccount = await nodemailer.createTestAccount()
-
+    if (process.env.NODE_ENV === 'test') {
       this.transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
+        host: 'smtp.teste.com',
         port: 587,
         secure: false,
         auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
+          user: 'test@teste.com',
+          pass: 'testpassword',
         },
       })
+      return
+    }
+
+    if (this.isDevelopment) {
+      try {
+        const testAccount = await nodemailer.createTestAccount()
+
+        this.transporter = nodemailer.createTransport({
+          host: 'smtp.ethereal.email',
+          port: 587,
+          secure: false,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        })
+      } catch (error) {
+        console.error(
+          'Erro ao criar conta Ethereal, usando transportador mock:',
+          error,
+        )
+        this.transporter = nodemailer.createTransport({
+          host: 'smtp.exemplo.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: 'test@exemplo.com',
+            pass: 'password',
+          },
+        })
+      }
     } else {
-      // Em produção, use as configurações do .env
       this.transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
         port: Number(process.env.EMAIL_PORT) || 587,
@@ -89,12 +115,14 @@ export class EmailService implements IEmailService {
       html,
     })
 
-    // Se estiver em desenvolvimento, exibe a URL de visualização
-    if (this.isDevelopment) {
-      console.log(
-        'URL de visualização do e-mail: %s',
-        nodemailer.getTestMessageUrl(info),
-      )
+    if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
+      const previewUrl = (info as any).messageId
+        ? `https://ethereal.email/message/${(info as any).messageId}`
+        : undefined
+
+      if (previewUrl) {
+        console.log('URL de visualização do e-mail: %s', previewUrl)
+      }
     }
   }
 
@@ -137,12 +165,14 @@ export class EmailService implements IEmailService {
       html,
     })
 
-    // Se estiver em desenvolvimento, exibe a URL de visualização
-    if (this.isDevelopment) {
-      console.log(
-        'URL de visualização do e-mail: %s',
-        nodemailer.getTestMessageUrl(info),
-      )
+    if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
+      const previewUrl = (info as any).messageId
+        ? `https://ethereal.email/message/${(info as any).messageId}`
+        : undefined
+
+      if (previewUrl) {
+        console.log('URL de visualização do e-mail: %s', previewUrl)
+      }
     }
   }
 
@@ -185,12 +215,14 @@ export class EmailService implements IEmailService {
       html,
     })
 
-    // Se estiver em desenvolvimento, exibe a URL de visualização
-    if (this.isDevelopment) {
-      console.log(
-        'URL de visualização do e-mail: %s',
-        nodemailer.getTestMessageUrl(info),
-      )
+    if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
+      const previewUrl = (info as any).messageId
+        ? `https://ethereal.email/message/${(info as any).messageId}`
+        : undefined
+
+      if (previewUrl) {
+        console.log('URL de visualização do e-mail: %s', previewUrl)
+      }
     }
   }
 
