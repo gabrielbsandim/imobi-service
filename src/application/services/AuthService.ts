@@ -12,11 +12,7 @@ import {
   TResetPasswordRequest,
 } from '@/domain/entities/UserEntity'
 import { IAuthRepository } from '@/domain/interfaces/repositories/database/IAuthRepository'
-import {
-  NotFoundError,
-  UnauthorizedError,
-  BadRequestError,
-} from '@/errors/HttpErrors'
+import { UnauthorizedError, BadRequestError } from '@/errors/HttpErrors'
 
 @injectable()
 export class AuthService {
