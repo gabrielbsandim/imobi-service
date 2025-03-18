@@ -24,9 +24,13 @@ export async function authenticate(
 
     const decodedToken = await authService.verifyToken(token)
 
-    const user = await userService.findById(decodedToken.uid)
+    const user = await userService.findById(decodedToken.userId)
 
     req.user = user
+    req.userId = user.id
+    req.userEmail = user.email
+    req.userType = user.userType
+
     next()
   } catch (error) {
     console.error('Authentication error:', error)

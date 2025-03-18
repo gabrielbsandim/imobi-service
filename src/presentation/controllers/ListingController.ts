@@ -28,7 +28,7 @@ export class ListingController {
 
       const response = await this.listingService.create({
         ...validatedData,
-        buyerId: req.user!.userId!,
+        buyerId: req.userId!,
         buyerPhoneNumber: req.user!.phoneNumber!,
       })
 

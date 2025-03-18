@@ -10,7 +10,7 @@ const config: Knex.Config = {
     database: 'postgres',
   },
   migrations: {
-    directory: './src/infra/database/migrations',
+    directory: './src/infra/repositories/database/migrations',
   },
 }
 

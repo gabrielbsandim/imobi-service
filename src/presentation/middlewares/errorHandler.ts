@@ -3,8 +3,14 @@ import { ValidationError } from 'yup'
 
 import { HttpError } from '@/errors/HttpErrors'
 
-export const errorHandler = (err: Error, _req: Request, res: Response) => {
+export const errorHandler = (
+  err: Error,
+  _req: Request,
+  res: Response,
+): void => {
   console.error(err.stack)
+
+  res.setHeader('Content-Type', 'application/json')
 
   const { statusCode } = err as HttpError
 

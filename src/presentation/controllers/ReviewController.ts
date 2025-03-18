@@ -22,7 +22,7 @@ export class ReviewController {
       const response = await this.reviewService.create({
         ...validatedData,
         brokerId: req.params.brokerId,
-        buyerId: req.user!.userId!,
+        buyerId: req.userId!,
       })
 
       res.status(201).json(response)

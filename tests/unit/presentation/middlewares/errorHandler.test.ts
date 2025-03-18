@@ -14,6 +14,7 @@ describe('ErrorHandler', () => {
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      setHeader: jest.fn(),
     }
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })

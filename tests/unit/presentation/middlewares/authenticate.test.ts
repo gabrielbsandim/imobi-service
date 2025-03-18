@@ -66,8 +66,17 @@ describe('authenticate middleware', () => {
 
     req.headers = { authorization: `Bearer ${token}` }
 
-    const decodedToken = { uid: 'user123' }
-    const user = { id: 'user123', name: 'John Doe' }
+    const decodedToken = {
+      userId: 'user123',
+      email: 'user@example.com',
+      userType: 'buyer',
+    }
+    const user = {
+      id: 'user123',
+      name: 'John Doe',
+      email: 'user@example.com',
+      userType: 'buyer',
+    }
 
     mockAuthService.verifyToken.mockResolvedValue(decodedToken)
     mockUserService.findById.mockResolvedValue(user)
@@ -76,9 +85,12 @@ describe('authenticate middleware', () => {
 
     expect(mockAuthService.verifyToken).toHaveBeenCalledWith(token)
 
-    expect(mockUserService.findById).toHaveBeenCalledWith(decodedToken.uid)
+    expect(mockUserService.findById).toHaveBeenCalledWith(decodedToken.userId)
 
     expect(req.user).toEqual(user)
+    expect(req.userId).toEqual(user.id)
+    expect(req.userEmail).toEqual(user.email)
+    expect(req.userType).toEqual(user.userType)
 
     expect(next).toHaveBeenCalledWith()
   })
@@ -106,14 +118,18 @@ describe('authenticate middleware', () => {
 
     req.headers = { authorization: `Bearer ${token}` }
 
-    const decodedToken = { uid: 'user123' }
+    const decodedToken = {
+      userId: 'user123',
+      email: 'user@example.com',
+      userType: 'buyer',
+    }
 
     mockAuthService.verifyToken.mockResolvedValue(decodedToken)
     mockUserService.findById.mockRejectedValue(new Error('User not found'))
 
     await authenticate(req as Request, res as Response, next)
 
-    expect(mockUserService.findById).toHaveBeenCalledWith(decodedToken.uid)
+    expect(mockUserService.findById).toHaveBeenCalledWith(decodedToken.userId)
 
     expect(next).toHaveBeenCalledWith(expect.any(UnauthorizedError))
 
