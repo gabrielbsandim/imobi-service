@@ -6,7 +6,7 @@ import { inject, injectable } from 'tsyringe'
 import { TCreateUser, UserEntity } from '@/domain/entities/UserEntity'
 import { IUserRepository } from '@/domain/interfaces/repositories/database/IUserRepository'
 import { ICreationResult } from '@/domain/interfaces/shared/ICreationResult'
-import { NotFoundError, UnauthorizedError } from '@/errors/HttpErrors'
+import { NotFoundError } from '@/errors/HttpErrors'
 
 @injectable()
 export class KnexUserRepository implements IUserRepository {

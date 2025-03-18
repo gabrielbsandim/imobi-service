@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { ValidationError } from 'yup'
 
 import { HttpError } from '@/errors/HttpErrors'
@@ -7,7 +7,6 @@ export const errorHandler = (
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction,
 ): void => {
   console.error(err.stack)
 

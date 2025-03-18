@@ -116,8 +116,8 @@ export class EmailService implements IEmailService {
     })
 
     if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
-      const previewUrl = (info as any).messageId
-        ? `https://ethereal.email/message/${(info as any).messageId}`
+      const previewUrl = info.messageId
+        ? `https://ethereal.email/message/${info.messageId}`
         : undefined
 
       if (previewUrl) {
@@ -166,8 +166,8 @@ export class EmailService implements IEmailService {
     })
 
     if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
-      const previewUrl = (info as any).messageId
-        ? `https://ethereal.email/message/${(info as any).messageId}`
+      const previewUrl = info.messageId
+        ? `https://ethereal.email/message/${info.messageId}`
         : undefined
 
       if (previewUrl) {
@@ -216,8 +216,8 @@ export class EmailService implements IEmailService {
     })
 
     if (process.env.NODE_ENV !== 'test' && this.isDevelopment) {
-      const previewUrl = (info as any).messageId
-        ? `https://ethereal.email/message/${(info as any).messageId}`
+      const previewUrl = info.messageId
+        ? `https://ethereal.email/message/${info.messageId}`
         : undefined
 
       if (previewUrl) {
