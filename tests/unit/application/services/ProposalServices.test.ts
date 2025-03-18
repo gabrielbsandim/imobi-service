@@ -8,8 +8,15 @@ import {
   mockProposalRepository,
 } from '@/tests/unit/mocks/ProposalMock'
 
+const mockListingService = {
+  findById: jest
+    .fn()
+    .mockResolvedValue({ id: 'listing-id', name: 'Test Listing' }),
+}
+
 container.register('IProposalRepository', { useValue: mockProposalRepository })
 container.register('IListingRepository', { useValue: mockListingRepository })
+container.register('ListingService', { useValue: mockListingService })
 
 describe('ProposalService', () => {
   let proposalService: ProposalService

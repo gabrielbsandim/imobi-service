@@ -24,7 +24,7 @@ export class ProposalController {
       const proposalResponse = await this.proposalService.create({
         ...validatedData,
         listingId: req.params.listingId,
-        brokerId: req.user!.userId!,
+        brokerId: req.userId!,
       })
 
       res.status(201).json(proposalResponse)

@@ -1,10 +1,10 @@
 import { injectable, inject } from 'tsyringe'
 
+import { ListingService } from '@/application/services/ListingService'
 import {
   ProposalEntity,
   TCreateProposal,
 } from '@/domain/entities/ProposalEntity'
-import { IListingRepository } from '@/domain/interfaces/repositories/database/IListingRepository'
 import { IProposalRepository } from '@/domain/interfaces/repositories/database/IProposalRepository'
 import { NotFoundError } from '@/errors/HttpErrors'
 
@@ -13,15 +13,11 @@ export class ProposalService {
   constructor(
     @inject('IProposalRepository')
     private proposalRepository: IProposalRepository,
-    @inject('IListingRepository') private listingRepository: IListingRepository,
+    @inject('ListingService') private listingService: ListingService,
   ) {}
 
   async create(proposal: Omit<TCreateProposal, 'status'>) {
-    const listing = await this.listingRepository.findById(proposal.listingId)
-
-    if (!listing) {
-      throw new NotFoundError('Anúncio não encontrado')
-    }
+    await this.listingService.findById(proposal.listingId)
 
     const created = await this.proposalRepository.create({
       ...proposal,

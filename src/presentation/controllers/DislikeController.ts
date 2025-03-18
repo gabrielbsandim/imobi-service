@@ -13,7 +13,7 @@ export class DislikeController {
     try {
       await this.dislikeService.toggleDislike({
         listingId: req.params.listingId,
-        brokerId: req.user!.userId!,
+        brokerId: req.userId!,
       })
 
       res.status(204).send()

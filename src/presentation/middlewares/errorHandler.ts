@@ -1,10 +1,17 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ValidationError } from 'yup'
 
 import { HttpError } from '@/errors/HttpErrors'
 
-export const errorHandler = (err: Error, _req: Request, res: Response) => {
+export const errorHandler = (
+  err: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): void => {
   console.error(err.stack)
+
+  res.setHeader('Content-Type', 'application/json')
 
   const { statusCode } = err as HttpError
 
@@ -18,10 +25,5 @@ export const errorHandler = (err: Error, _req: Request, res: Response) => {
     return
   }
 
-  if (err instanceof Error) {
-    res.status(500).json({ error: err.message })
-    return
-  }
-
-  res.status(500).json({ error: 'Unknown error' })
+  res.status(500).json({ error: err.message || 'Erro interno do servidor' })
 }

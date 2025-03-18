@@ -13,7 +13,7 @@ export class FavoriteController {
     try {
       await this.favoriteService.toggleFavorite({
         listingId: req.params.listingId,
-        brokerId: req.user!.userId!,
+        brokerId: req.userId!,
       })
 
       res.status(204).send()
